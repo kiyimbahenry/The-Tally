@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sell Out - Pharm-Tally</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin:20px; }
+        input[type=text], input[type=number] { padding:5px; margin:5px 0; width:200px; }
+        table { border-collapse: collapse; width: 100%; margin-top:10px; }
+        th, td { border:1px solid #ccc; padding:8px; text-align:left; }
+        th { background:#f2f2f2; }
+        #suggestions { border:1px solid #ccc; max-height:150px; overflow-y:auto; position:absolute; background:white; z-index:10; width:300px; }
+        #suggestions div:hover { background:#eee; cursor:pointer; }
+        button { padding:8px 15px; background:green; color:white; border:none; border-radius:5px; margin-top:10px; }
+    </style>
+</head>
+<body>
+
+<h2>Sell Out</h2>
+
+<!-- Search Box -->
+<input type="text" id="drugSearch" placeholder="Search drugs...">
+<div id="suggestions"></div>
+
+<!-- Selected Drugs Table -->
+<form method="POST" id="sellForm">
+    <table id="sellTable">
+        <thead>
+            <tr>
+                <th>Drug Name</th>
+                <th>Brand</th>
+                <th>Selling Price</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Selected drugs will appear here -->
+        </tbody>
+    </table>
+    <input type="hidden" name="items" id="itemsInput">
+    <button type="submit">Sell</button>
+</form>
+
+<script>
+const stock = {{ stock|tojson }};
+const suggestionsDiv = document.getElementById('suggestions');
+const searchInput = document.getElementById('drugSearch');
+const sellTableBody = document.querySelector('#sellTable tbody');
+const itemsInput = document.getElementById('itemsInput');
+
+let selectedDrugs = [];
+
+searchInput.addEventListener('input', () => {
+    const query = searchInput.value.toLowerCase();
+    suggestionsDiv.innerHTML = '';
+    if (!query) return;
+    
+    const matches = stock.filter(drug => drug.name.toLowerCase().includes(query));
+    matches.forEach(drug => {
+        const div = document.createElement('div');
+        div.textContent = `${drug.name} (${drug.brand_name}) - $${drug.selling_price}`;
+        div.style.padding = '5px';
+        div.style.cursor = 'pointer';
+        div.addEventListener('click', () => {
+            addDrugToTable(drug);
+            searchInput.value = '';
+            suggestionsDiv.innerHTML = '';
+        });
+        suggestionsDiv.appendChild(div);
+    });
+});
+
+function addDrugToTable(drug) {
+    if (selectedDrugs.find(d => d.id === drug.id)) return;
+    selectedDrugs.push({id: drug.id, quantity: 1});
+    renderTable();
+}
+
+function renderTable() {
+    sellTableBody.innerHTML = '';
+    selectedDrugs.forEach((drug, index) => {
+        const row = document.createElement('tr');
+        const d = stock.find(s => s.id === drug.id);
+        row.innerHTML = `
+            <td>${d.name}</td>
+            <td>${d.brand_name}</td>
+            <td>${d.selling_price}</td>
+            <td><input type="number" min="1" value="${drug.quantity}" data-index="${index}"></td>
+        `;
+        sellTableBody.appendChild(row);
+    });
+
+    sellTableBody.querySelectorAll('input[type="number"]').forEach(input => {
+        input.addEventListener('input', (e) => {
+            const idx = e.target.dataset.index;
+            selectedDrugs[idx].quantity = parseInt(e.target.value) || 1;
+            updateItemsInput();
+        });
+    });
+
+    updateItemsInput();
+}
+
+function updateItemsInput() {
+    const itemsString = selectedDrugs.map(d => `${d.id}:${d.quantity}`).join(',');
+    itemsInput.value = itemsString;
+}
+</script>
+
+</body>
+</html>

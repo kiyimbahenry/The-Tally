@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Stock - Pharm-Tally</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      padding: 20px;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: space-between;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      flex: 1 1 45%; /* two columns */
+      min-width: 300px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0 15px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 5px;
+      display: block;
+    }
+
+    button {
+      background-color: #28a745;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Add Stock</h2>
+
+<form id="addStockForm" method="POST">
+  <div class="container">
+    <!-- Column 1 -->
+    <div class="card">
+      <label>Generic Name</label>
+      <input type="text" name="generic_name" required>
+
+      <label>Brand Name</label>
+      <input type="text" name="brand_name" required>
+
+      <label>Cost Price (per packet)</label>
+      <input type="number" name="cost_price" id="cost_price" step="0.01" min="0" required>
+
+      <label>Quantity per Packet</label>
+      <input type="number" name="packet_quantity" id="packet_quantity" step="1" min="1" required>
+
+      <label>Automatic Selling Price</label>
+      <input type="number" name="selling_price" id="selling_price" step="0.01" min="0" required>
+    </div>
+
+    <!-- Column 2 -->
+    <div class="card">
+      <label>Batch Number</label>
+      <input type="text" name="batch_number" required>
+
+      <label>Dosage Form</label>
+      <select name="dosage_form" required>
+        <option value="Tablet">Tablet</option>
+        <option value="Capsule">Capsule</option>
+        <option value="Syrup">Syrup</option>
+        <option value="Injection">Injection</option>
+        <option value="Ointment">Ointment</option>
+        <option value="Cream">Cream</option>
+        <option value="Solution">Solution</option>
+        <option value="Suspension">Suspension</option>
+        <option value="Drops">Drops</option>
+      </select>
+
+      <label>Supplier</label>
+      <select name="supplier_id" required>
+        {% for supplier in suppliers %}
+        <option value="{{ supplier.id }}">{{ supplier.name }}</option>
+        {% endfor %}
+      </select>
+
+      <label>Expiry Date</label>
+      <input type="date" name="expiry_date" required>
+
+      <label>Strength</label>
+      <input type="text" name="strength" placeholder="e.g., 500 mg, 5 ml, 250 mcg" required>
+    </div>
+  </div>
+
+  <button type="submit">Add Stock</button>
+</form>
+
+<script>
+  // Calculate selling price automatically based on cost and packet quantity
+  const costInput = document.getElementById("cost_price");
+  const quantityInput = document.getElementById("packet_quantity");
+  const sellingInput = document.getElementById("selling_price");
+
+  function updateSellingPrice() {
+    let cost = parseFloat(costInput.value) || 0;
+    let qty = parseFloat(quantityInput.value) || 1;
+    let suggested = ((cost / qty) * 1.5).toFixed(2);
+    sellingInput.value = suggested;
+  }
+
+  costInput.addEventListener("input", updateSellingPrice);
+  quantityInput.addEventListener("input", updateSellingPrice);
+
+  // Ensure selling price cannot be lower than cost per unit
+  sellingInput.addEventListener("input", () => {
+    let cost = parseFloat(costInput.value) || 0;
+    let qty = parseFloat(quantityInput.value) || 1;
+    let minSelling = (cost / qty).toFixed(2);
+    if(parseFloat(sellingInput.value) < minSelling){
+      alert("Selling price cannot be below cost per unit!");
+      sellingInput.value = minSelling;
+    }
+  });
+</script>
+
+</body>
+</html>

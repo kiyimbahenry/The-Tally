@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Record Sale - Pharm-Tally</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header><h2>Record Sale - Pharm-Tally</h2></header>
+  <div class="container">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <p style="color:green;">{{ messages[0] }}</p>
+      {% endif %}
+    {% endwith %}
+
+    <form method="post" id="saleForm">
+      <label>Search Drug:</label><br>
+      <input type="text" name="search_drug" id="search_drug" placeholder="Start typing drug name..." oninput="searchDrug()"><br><br>
+
+      <label>Cost Price:</label><br>
+      <input type="text" id="cost_price" readonly><br><br>
+
+      <label>Quantity to sell:</label><br>
+      <input type="number" name="quantity" id="quantity" required><br><br>
+
+      <label>Batch Number:</label><br>
+      <input type="text" name="batch_number" id="batch_number" readonly><br><br>
+
+      <input type="hidden" name="item" id="item_name">
+    </form>
+
+    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+  </div>
+
+<script>
+function searchDrug(){
+    let val = document.getElementById("search_drug").value;
+    fetch(`/search_stock?name=${val}`)
+        .then(response => response.json())
+        .then(data => {
+            if(data.name){
+                document.getElementById("item_name").value = data.name;
+                document.getElementById("cost_price").value = data.price;
+                document.getElementById("batch_number").value = data.batch_number;
+            } else {
+                document.getElementById("item_name").value = '';
+                document.getElementById("cost_price").value = '';
+                document.getElementById("batch_number").value = '';
+            }
+        });
+}
+
+// Sell on Enter key
+document.getElementById("quantity").addEventListener("keypress", function(event){
+    if(event.key === "Enter"){
+        event.preventDefault();
+        document.getElementById("saleForm").submit();
+    }
+});
+</script>
+</body>
+</html>

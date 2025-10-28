@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Suppliers - Pharm-Tally</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: space-between;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      flex: 1 1 45%; /* two columns */
+      min-width: 300px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #6a11cb;
+      color: white;
+    }
+
+    td {
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Suppliers</h2>
+
+<div class="container">
+  <!-- Left column: Add Supplier Form -->
+  <div class="card">
+    <h3>Add New Supplier</h3>
+    <form method="POST">
+      <label>Name</label>
+      <input type="text" name="name" required>
+
+      <label>Email</label>
+      <input type="email" name="email">
+
+      <label>Address</label>
+      <input type="text" name="address">
+
+      <label>Contact</label>
+      <input type="text" name="contact" required>
+
+      <label>Location</label>
+      <input type="text" name="location">
+
+      <button type="submit">Save</button>
+    </form>
+  </div>
+
+  <!-- Right column: Suppliers Table -->
+  <div class="card">
+    <h3>Existing Suppliers</h3>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Address</th>
+        <th>Contact</th>
+        <th>Location</th>
+      </tr>
+      {% for supplier in suppliers %}
+      <tr>
+        <td>{{ supplier.name }}</td>
+        <td>{{ supplier.email }}</td>
+        <td>{{ supplier.address }}</td>
+        <td>{{ supplier.contact }}</td>
+        <td>{{ supplier.location }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+</body>
+</html>

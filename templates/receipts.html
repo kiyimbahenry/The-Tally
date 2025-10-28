@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Receipts - Pharm-Tally</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header><h2>All Sales / Receipts</h2></header>
+  <div class="container">
+    <p>Total Earnings: {{ total_earnings }} UGX</p>
+    <table border="1" cellpadding="5">
+      <tr>
+        <th>Item</th>
+        <th>Quantity</th>
+        <th>Total (UGX)</th>
+        <th>Batch</th>
+        <th>Date</th>
+        <th>Action</th>
+      </tr>
+      {% for s in sales_list %}
+      <tr>
+        <td>{{ s[1] }}</td>
+        <td>{{ s[2] }}</td>
+        <td>{{ s[3] }}</td>
+        <td>{{ s[5] }}</td>
+        <td>{{ s[4] }}</td>
+        <td><a href="{{ url_for('receipt', sale_id=s[0]) }}" target="_blank">View / Print</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+    <br>
+    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+  </div>
+</body>
+</html>

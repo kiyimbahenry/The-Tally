@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Add Supplier - Pharm-Tally</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header><h2>Add Supplier - Pharm-Tally</h2></header>
+  <div class="container">
+    <form method="post">
+      <label>Supplier Name:</label><br>
+      <input type="text" name="name" required><br><br>
+
+      <label>Contact Info:</label><br>
+      <input type="text" name="contact" required><br><br>
+
+      <label>Address:</label><br>
+      <input type="text" name="address" required><br><br>
+
+      <button type="submit">Add Supplier</button>
+    </form>
+    <br>
+    <a href="{{ url_for('suppliers') }}">Back</a>
+  </div>
+</body>
+</html>

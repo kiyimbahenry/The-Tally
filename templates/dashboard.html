@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard - Pharm-Tally</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f8f9fa;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Left sidebar */
+    .sidebar {
+      width: 220px;
+      background: #6a11cb;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding-top: 20px;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 22px;
+    }
+
+    .sidebar a {
+      text-decoration: none;
+      color: white;
+      padding: 15px 20px;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    .sidebar a:hover {
+      background-color: #2575fc;
+    }
+
+    /* Right content area */
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #6a11cb;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h2>Pharm-Tally</h2>
+    <a href="{{ url_for('sell_out') }}">Sell Out</a>
+    <a href="{{ url_for('add_stock') }}">Add Stock</a>
+    <a href="{{ url_for('suppliers') }}">Suppliers</a>
+    <a href="{{ url_for('receipts') }}">Receipts</a>
+    <a href="{{ url_for('logout') }}" style="color:white; background:red; padding:5px 10px; border-radius:5px; text-decoration:none;">
+    Logout
+</a>
+
+  </div>
+
+  <!-- Main content -->
+  <div class="main-content">
+    <!-- Quick Stats -->
+    <div class="card">
+      <h3>Quick Stats</h3>
+      <p>Total Drugs: {{ total_drugs }}</p>
+      <p>Total Suppliers: {{ total_suppliers }}</p>
+      <p>Daily Sales Total: {{ daily_total }} UGX</p>
+    </div>
+
+    <!-- Stock Table -->
+    <div class="card">
+      <h3>Stock Table</h3>
+      <table>
+        <tr>
+          <th>Drug</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Batch</th>
+          <th>Expiry</th>
+        </tr>
+        {% for item in stock %}
+        <tr>
+          <td>{{ item.name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.price }}</td>
+          <td>{{ item.batch_number }}</td>
+          <td>{{ item.expiry_date }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

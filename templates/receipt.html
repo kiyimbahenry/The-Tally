@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Receipt - Pharm-Tally</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .receipt-box {
+      width: 350px;
+      margin: 30px auto;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .header {
+      text-align: center;
+      border-bottom: 1px solid #ccc;
+      margin-bottom: 15px;
+    }
+    .header h2 {
+      margin: 0;
+      color: #0074D9;
+    }
+    .meta { text-align: left; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <div class="receipt-box">
+    <div class="header">
+      <h2>Pharm-Tally Pharmacy</h2>
+      <p>📍 Kampala, Uganda<br>
+         ☎ 0759025693<br>
+         ✉ info@pharmtally.com</p>
+      <hr>
+      <strong>Sales Receipt</strong>
+    </div>
+
+    <div class="meta">
+      <p><strong>Item:</strong> {{ item }}</p>
+      <p><strong>Quantity:</strong> {{ quantity }}</p>
+      <p><strong>Total:</strong> {{ total }} UGX</p>
+      <p><strong>Date:</strong> {{ date }}</p>
+    </div>
+
+    <hr>
+    <p>Served by: <strong>Admin Henry</strong></p>
+    <p>Thank you for shopping with Pharm-Tally!</p>
+    <button onclick="window.print()">🖨️ Print Receipt</button><br><br>
+    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+  </div>
+</body>
+</html>
+
